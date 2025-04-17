@@ -60,4 +60,13 @@
 import pandas as pd
 
 
-def
+def ReadFile():
+
+def SaveFile():
+
+def Fuzzification():
+
+def Inferensi():
+
+def Defuzzification():
+    
