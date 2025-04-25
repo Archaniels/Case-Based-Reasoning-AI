@@ -59,14 +59,23 @@
 
 import pandas as pd
 
-
+# membaca data dari file
 def ReadFile():
+    # membaca data dari file restoran.xlsx
+    df = pd.read_excel('C:\Users\sxpix\Downloads\restoran.xlsx')
+    return df
 
+#menyimpan data ke file restoran_terbaik.xlsx
 def SaveFile():
 
+# proses fuzzification
 def Fuzzification():
 
+# proses inferensi
 def Inferensi():
 
+# proses defuzzification
 def Defuzzification():
     
+# main function
+def Main():
