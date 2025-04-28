@@ -62,20 +62,61 @@ import pandas as pd
 # membaca data dari file
 def ReadFile():
     # membaca data dari file restoran.xlsx
-    df = pd.read_excel('C:\Users\sxpix\Downloads\restoran.xlsx')
-    return df
+    data  = pd.read_excel('C:\Users\sxpix\Downloads\restoran.xlsx') # ganti sesuai dengan path file anda
+    return data 
 
-#menyimpan data ke file restoran_terbaik.xlsx
-def SaveFile():
+# menyimpan data ke file peringkat.xlsx
+def SaveFile(dataHasil):
+    dataHasil.to_excel('peringkat.xlsx', index=False) # menyimpan data ke file peringkat.xlsx
+
+# fungsi membership untuk kualitas servis
+def kualitas_servis(x):
+    # menghitung derajat keanggotaan 'buruk', 'sedang', dan 'bagus' untuk nilai servis
+    # fungsi keanggotaan berbentuk segitiga
+    return {
+        'buruk': max(min((40 - x) / 40, 1), 0), # semakin kecil x, semakin 'buruk' (0-40)
+        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0), # nilai tengah antara 30-70
+        'bagus': max(min((x - 60) / 40, 1), 0) # semakin besar x, semakin 'bagus' (60-100)
+    }
+
+# fungsi membership untuk harga
+def harga_restoran(x):
+    # menghitung derajat keanggotaan 'murah', 'sedang', dan 'mahal' untuk nilai harga
+    # fungsi keanggotaan berbentuk segitiga
+    return {
+        'murah': max(min((35000 - x) / 10000, 1), 0), # semakin kecil harga, semakin 'murah' 
+        'sedang': max(min((x - 30000) / 15000, (45000 - x) / 15000, 1), 0), # harga sedang antara 30rb-45rb
+        'mahal': max(min((x - 40000) / 15000, 1), 0) # semakin besar harga, semakin 'mahal'
+    }
 
 # proses fuzzification
-def Fuzzification():
+def Fuzzification(data):
+    # Melakukan proses fuzzifikasi semua data restoran
+    fuzzy_data = []
+    for index, row in data.iterrows():
+        servis_fuzz = kualitas_servis(row['Servis']) # hitung membership kualitas servis
+        harga_fuzz = harga_restoran(row['Harga']) # hitung membership harga
+        fuzzy_data.append({
+            'id': row['ID'],
+            'servis': servis_fuzz,
+            'harga': harga_fuzz,
+            'servis_asli': row['Servis'],
+            'harga_asli': row['Harga']
+        })
+    return fuzzy_data
 
 # proses inferensi
 def Inferensi():
 
+
 # proses defuzzification
 def Defuzzification():
     
+
 # main function
 def Main():
+    # membaca file
+    data = ReadFile()
+
+    # Proses Fuzzification
+    fuzzy_data = Fuzzification(data)
