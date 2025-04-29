@@ -20,3 +20,7 @@ Proses yang harus Anda implementasikan ke dalam program (bisa berbentuk fungsi/p
 - Defuzzification
 - Menyimpan output ke file 
 Catatan: Proses-proses di atas harus dibangun tanpa menggunakan Library!
+
+Resource:
+Link Presentasi: https://www.canva.com/design/DAGmANG05cc/9ptEZTTUCWQzWymcD4Bd6g/edit?utm_content=DAGmANG05cc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+Link Laporan: https://docs.google.com/document/d/14yUIvnY2U87wUFnTI39OCyHLZ3ojc1vgN9fRyKHnjYc/edit?usp=sharing
