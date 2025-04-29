@@ -97,7 +97,7 @@ def Fuzzification(data):
         servis_fuzz = kualitas_servis(row['Pelayanan']) # hitung membership kualitas servis
         harga_fuzz = harga_restoran(row['harga']) # hitung membership harga
         fuzzy_data.append({
-            'id Pelanggan': row['ID'],
+            'ID': row['id Pelanggan'],
             'servis': servis_fuzz,
             'harga': harga_fuzz,
             'servis_asli': row['Pelayanan'],
