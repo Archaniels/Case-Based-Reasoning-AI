@@ -94,14 +94,14 @@ def Fuzzification(data):
     # Melakukan proses fuzzifikasi semua data restoran
     fuzzy_data = []
     for index, row in data.iterrows():
-        servis_fuzz = kualitas_servis(row['Servis']) # hitung membership kualitas servis
-        harga_fuzz = harga_restoran(row['Harga']) # hitung membership harga
+        servis_fuzz = kualitas_servis(row['Pelayanan']) # hitung membership kualitas servis
+        harga_fuzz = harga_restoran(row['harga']) # hitung membership harga
         fuzzy_data.append({
-            'id': row['ID'],
+            'id Pelanggan': row['ID'],
             'servis': servis_fuzz,
             'harga': harga_fuzz,
-            'servis_asli': row['Servis'],
-            'harga_asli': row['Harga']
+            'servis_asli': row['Pelayanan'],
+            'harga_asli': row['harga']
         })
     return fuzzy_data
 
