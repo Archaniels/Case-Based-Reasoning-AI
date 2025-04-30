@@ -59,37 +59,32 @@
 
 import pandas as pd
 
-# membaca data dari file
+# Membaca data dari file
 def ReadFile():
-    # membaca data dari file restoran.xlsx
-    data  = pd.read_excel('C:\Users\sxpix\Downloads\restoran.xlsx') # ganti sesuai dengan path file anda
-    return data 
+    data = pd.read_excel(r'D:\AI\restoran.xlsx')  # Pastikan file ada
+    return data
 
-# menyimpan data ke file peringkat.xlsx
+# Menyimpan hasil ke file Excel
 def SaveFile(dataHasil):
-    dataHasil.to_excel('peringkat.xlsx', index=False) # menyimpan data ke file peringkat.xlsx
+    dataHasil.to_excel('D:\AI\peringkat.xlsx', index=False)
 
-# fungsi membership untuk kualitas servis
+# Membership fungsi untuk kualitas servis
 def kualitas_servis(x):
-    # menghitung derajat keanggotaan 'buruk', 'sedang', dan 'bagus' untuk nilai servis
-    # fungsi keanggotaan berbentuk segitiga
     return {
-        'buruk': max(min((40 - x) / 40, 1), 0), # semakin kecil x, semakin 'buruk' (0-40)
-        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0), # nilai tengah antara 30-70
-        'bagus': max(min((x - 60) / 40, 1), 0) # semakin besar x, semakin 'bagus' (60-100)
+        'buruk': max(min((40 - x) / 40, 1), 0),
+        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0),
+        'bagus': max(min((x - 60) / 40, 1), 0)
     }
 
-# fungsi membership untuk harga
+# Membership fungsi untuk harga
 def harga_restoran(x):
-    # menghitung derajat keanggotaan 'murah', 'sedang', dan 'mahal' untuk nilai harga
-    # fungsi keanggotaan berbentuk segitiga
     return {
-        'murah': max(min((35000 - x) / 10000, 1), 0), # semakin kecil harga, semakin 'murah' 
-        'sedang': max(min((x - 30000) / 15000, (45000 - x) / 15000, 1), 0), # harga sedang antara 30rb-45rb
-        'mahal': max(min((x - 40000) / 15000, 1), 0) # semakin besar harga, semakin 'mahal'
+        'murah': max(min((35000 - x) / 10000, 1), 0),
+        'sedang': max(min((x - 30000) / 15000, (45000 - x) / 15000, 1), 0),
+        'mahal': max(min((x - 40000) / 15000, 1), 0)
     }
 
-# proses fuzzification
+# Proses fuzzifikasi
 def Fuzzification(data):
     # Melakukan proses fuzzifikasi semua data restoran
     fuzzy_data = []
@@ -105,18 +100,82 @@ def Fuzzification(data):
         })
     return fuzzy_data
 
-# proses inferensi
-def Inferensi():
+#proses inferensi
+def inferensi(servis, harga):
+    # Ambil derajat keanggotaan dari masing-masing kategori pada servis
+    buruk, sedang, bagus = servis['buruk'], servis['sedang'], servis['bagus']
+    # Ambil derajat keanggotaan dari masing-masing kategori pada harga
+    murah, harga_sedang, mahal = harga['murah'], harga['sedang'], harga['mahal']
+
+    # Buat aturan fuzzy berdasarkan kombinasi servis dan harga
+    rules = [
+        (min(buruk, mahal), 'rendah'),          # Jika pelayanan buruk dan harga mahal -> skor rendah
+        (min(buruk, harga_sedang), 'rendah'),   # Jika pelayanan buruk dan harga sedang -> skor rendah
+        (min(buruk, murah), 'sedang'),          # Jika pelayanan buruk dan harga murah -> skor sedang
+
+        (min(sedang, mahal), 'sedang'),         # Jika pelayanan sedang dan harga mahal -> skor sedang
+        (min(sedang, harga_sedang), 'sedang'),  # Jika pelayanan sedang dan harga sedang -> skor sedang
+        (min(sedang, murah), 'tinggi'),         # Jika pelayanan sedang dan harga murah -> skor tinggi
+
+        (min(bagus, mahal), 'sedang'),          # Jika pelayanan bagus dan harga mahal -> skor sedang
+        (min(bagus, harga_sedang), 'tinggi'),   # Jika pelayanan bagus dan harga sedang -> skor tinggi
+        (min(bagus, murah), 'tinggi'),          # Jika pelayanan bagus dan harga murah -> skor tinggi
+    ]
+    return rules  # Kembalikan aturan dalam bentuk list pasangan (nilai_minimum, kategori)
+
+# Proses defuzzifikasi
+def Defuzzification(rules):
+    num = 0     # Pembilang dari perhitungan weighted average
+    denom = 0   # Penyebutnya (total bobot yang digunakan)
+
+    # Iterasi semua aturan fuzzy
+    for nilai, kategori in rules:
+        # Tetapkan nilai numerik berdasarkan kategori fuzzy
+        if kategori == 'rendah':
+            score = 30
+        elif kategori == 'sedang':
+            score = 50
+        elif kategori == 'tinggi':
+            score = 100
+        else:
+            score = 0  # Jika tidak cocok dengan kategori manapun
+
+        # Akumulasi nilai * skor ke pembilang dan nilai ke penyebut
+        num += nilai * score
+        denom += nilai
+
+    # Menghitung hasil akhir (nilai defuzzifikasi), jika penyebut tidak nol
+    if denom != 0:
+        return num / denom
+    else:
+        return 0  # Jika semua nilai 0, hasil juga 0
 
 
-# proses defuzzification
-def Defuzzification():
-    
-
-# main function
-def Main():
-    # membaca file
+# Fungsi utama
+def utama():
     data = ReadFile()
-
-    # Proses Fuzzification
     fuzzy_data = Fuzzification(data)
+
+    hasil_akhir = []
+    for item in fuzzy_data:
+        servis = item['servis']
+        harga = item['harga']
+        rules = inferensi(servis, harga)
+        skor = Defuzzification(rules)
+
+        hasil_akhir.append({
+            'ID': item['ID'],
+            'Servis': item['servis_asli'],
+            'Harga': item['harga_asli'],
+            'Skor': skor
+        })
+
+    # Ambil 5 restoran terbaik
+    top5 = sorted(hasil_akhir, key=lambda x: x['Skor'], reverse=True)[:5]
+    SaveFile(pd.DataFrame(top5))
+    print(f"{'No':<5}{'ID Pelanggan':<15}{'Servis':<10}{'Harga':<10}{'Skor'}")
+    for i, res in enumerate(top5, 1):
+        print(f"{i:<5}{res['ID']:<15}{res['Servis']:<10}{res['Harga']:<10}{res['Skor']:.2f}")
+
+
+utama()
