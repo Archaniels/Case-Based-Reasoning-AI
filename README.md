@@ -21,6 +21,13 @@ Proses yang harus Anda implementasikan ke dalam program (bisa berbentuk fungsi/p
 - Menyimpan output ke file 
 Catatan: Proses-proses di atas harus dibangun tanpa menggunakan Library!
 
+Panduan Penggunaan Program:
+- Karena program menggunakan bahasa Python, buka IDE pilihan anda, seperti Visual Studio Code, atau Visual Studio 2022.
+- Di ReadFile(), harap ganti lokasi yang telah di tentukan di kode dengan lokasi file restoran.xlsx yang anda miliki, atau yang telah di attach di repository ini.
+- Jalankan program menggunakan tombol "run" di toolbar IDE anda.
+- Jika program berjalan, window terminal baru akan tampil di layar, serta hasil kerja program.
+- Selain itu, juga terdapat function SaveFile() dan anda dapat mengatur dimana anda ingin menyimpan lokasi file tersebut.
+
 Resource:
 Link Presentasi: https://www.canva.com/design/DAGmANG05cc/9ptEZTTUCWQzWymcD4Bd6g/edit?utm_content=DAGmANG05cc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 Link Laporan: https://docs.google.com/document/d/14yUIvnY2U87wUFnTI39OCyHLZ3ojc1vgN9fRyKHnjYc/edit?usp=sharing
