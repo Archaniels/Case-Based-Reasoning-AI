@@ -75,8 +75,8 @@ def kualitas_servis(x):
     # fungsi keanggotaan berbentuk segitiga
     return {
         'buruk': max(min((40 - x) / 40, 1), 0), # semakin kecil x, semakin 'buruk' (0-40)
-        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0), # nilai tengah antara 30-70
-        'bagus': max(min((x - 60) / 40, 1), 0) # semakin besar x, semakin 'bagus' (60-100)
+        'sedang': max(min((x - 30) / 40, (80 - x) / 40, 1), 0), # nilai tengah antara (30-80)
+        'bagus': max(min((x - 70) / 40, 1), 0) # semakin besar x, semakin 'bagus' (70-100)
     }
 
 # fungsi membership untuk harga
@@ -176,11 +176,13 @@ def utama():
         })
 
     # Ambil 5 restoran terbaik
-    top5 = sorted(hasil_akhir, key=lambda x: x['Skor'], reverse=True)[:5]
-    SaveFile(pd.DataFrame(top5))
+    df = pd.DataFrame(hasil_akhir)
+    top5 = df[df['Skor'] == 100].sort_values(by='Harga').head(5)
+    SaveFile(top5)
     print(f"{'No':<5}{'ID Pelanggan':<15}{'Servis':<10}{'Harga':<10}{'Skor'}")
-    for i, res in enumerate(top5, 1):
-        print(f"{i:<5}{res['ID']:<15}{res['Servis']:<10}{res['Harga']:<10}{res['Skor']:.2f}")
+    for i, res in enumerate(top5.itertuples(), 1):
+        print(f"{i:<5}{res.ID:<15}{res.Servis:<10}{res.Harga:<10}{res.Skor:.2f}")
+
 
 
 utama()
