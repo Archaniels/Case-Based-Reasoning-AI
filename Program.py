@@ -59,32 +59,37 @@
 
 import pandas as pd
 
-# Membaca data dari file
+# membaca data dari file
 def ReadFile():
-    data = pd.read_excel(r'D:\AI\restoran.xlsx')  # Pastikan file ada
-    return data
+    # membaca data dari file restoran.xlsx
+    data  = pd.read_excel(r'C:\Users\sxpix\Downloads\restoran.xlsx') # ganti sesuai dengan path file anda
+    return data 
 
-# Menyimpan hasil ke file Excel
+# menyimpan data ke file peringkat.xlsx
 def SaveFile(dataHasil):
-    dataHasil.to_excel('D:\AI\peringkat.xlsx', index=False)
+    dataHasil.to_excel(r'C:\Users\sxpix\Downloads\Hasil Run\peringkat.xlsx', index=False) # menyimpan data ke file peringkat.xlsx
 
-# Membership fungsi untuk kualitas servis
+# fungsi membership untuk kualitas servis
 def kualitas_servis(x):
+    # menghitung derajat keanggotaan 'buruk', 'sedang', dan 'bagus' untuk nilai servis
+    # fungsi keanggotaan berbentuk segitiga
     return {
-        'buruk': max(min((40 - x) / 40, 1), 0),
-        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0),
-        'bagus': max(min((x - 60) / 40, 1), 0)
+        'buruk': max(min((40 - x) / 40, 1), 0), # semakin kecil x, semakin 'buruk' (0-40)
+        'sedang': max(min((x - 30) / 40, (70 - x) / 40, 1), 0), # nilai tengah antara 30-70
+        'bagus': max(min((x - 60) / 40, 1), 0) # semakin besar x, semakin 'bagus' (60-100)
     }
 
-# Membership fungsi untuk harga
+# fungsi membership untuk harga
 def harga_restoran(x):
+    # menghitung derajat keanggotaan 'murah', 'sedang', dan 'mahal' untuk nilai harga
+    # fungsi keanggotaan berbentuk segitiga
     return {
-        'murah': max(min((35000 - x) / 10000, 1), 0),
-        'sedang': max(min((x - 30000) / 15000, (45000 - x) / 15000, 1), 0),
-        'mahal': max(min((x - 40000) / 15000, 1), 0)
+        'murah': max(min((35000 - x) / 10000, 1), 0), # semakin kecil harga, semakin 'murah' 
+        'sedang': max(min((x - 30000) / 15000, (45000 - x) / 15000, 1), 0), # harga sedang antara 30rb-45rb
+        'mahal': max(min((x - 40000) / 15000, 1), 0) # semakin besar harga, semakin 'mahal'
     }
 
-# Proses fuzzifikasi
+# proses fuzzification
 def Fuzzification(data):
     # Melakukan proses fuzzifikasi semua data restoran
     fuzzy_data = []
