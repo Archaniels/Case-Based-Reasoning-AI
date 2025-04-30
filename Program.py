@@ -179,6 +179,7 @@ def utama():
     df = pd.DataFrame(hasil_akhir)
     top5 = df[df['Skor'] == 100].sort_values(by='Harga').head(5)
     SaveFile(top5)
+    print(r"File disimpan di: C:\Users\sxpix\Downloads\Hasil Run\peringkat.xlsx")
     print(f"{'No':<5}{'ID Pelanggan':<15}{'Servis':<10}{'Harga':<10}{'Skor'}")
     for i, res in enumerate(top5.itertuples(), 1):
         print(f"{i:<5}{res.ID:<15}{res.Servis:<10}{res.Harga:<10}{res.Skor:.2f}")
